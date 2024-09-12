@@ -1,0 +1,128 @@
+.unvis {
+    visibility: hidden;
+    display: none;
+  }
+
+.card {
+  border-radius: 0px;
+}
+
+.modal-content{
+  border-radius: 0px;
+}
+
+.t-div {
+  color: #33CC33;
+}
+
+.usercard-home-card {
+    border: none; 
+    margin-bottom: 5px;
+    margin: 10px;
+    max-width: 700px;
+}
+
+.bg_old {
+  background: -webkit-linear-gradient(90deg, #9a4572,#692fae);background: linear-gradient(90deg, #9a4572,#692fae);
+}
+
+.bg {
+  background-color: #1f1f1f;
+}
+
+
+
+
+.mes-me{
+  background-color: #2a2f33;
+}
+
+.mes-to{
+  background-color: #2a2f33;
+}
+
+
+
+.card-body {
+    border-radius: 8px;
+}
+
+.btn {
+  border-radius: 0px;
+}
+
+.img-center{
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto;
+}
+
+.menu-item-small{
+  width: 70px; 
+  height: 70px; 
+  margin: 5px; 
+  display:inline; 
+  float:left;
+}
+
+.usercard-img {
+    width: 160px; 
+    float:left;
+    border-radius: 8px;
+    margin-right: 10px;
+}
+
+.loader {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 6rem;
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+}
+.loader:before,
+.loader:after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  animation: pulsOut 1.8s ease-in-out infinite;
+  filter: drop-shadow(0 0 1rem rgba(255, 255, 255, 0.75));
+}
+.loader:before {
+  width: 100%;
+  padding-bottom: 100%;
+  box-shadow: inset 0 0 0 1rem #fff;
+  animation-name: pulsIn;
+}
+.loader:after {
+  width: calc(100% - 2rem);
+  padding-bottom: calc(100% - 2rem);
+  box-shadow: 0 0 0 0 #fff;
+}
+
+@keyframes pulsIn {
+  0% {
+    box-shadow: inset 0 0 0 1rem #fff;
+    opacity: 1;
+  }
+  50%, 100% {
+    box-shadow: inset 0 0 0 0 #fff;
+    opacity: 0;
+  }
+}
+
+@keyframes pulsOut {
+  0%, 50% {
+    box-shadow: 0 0 0 0 #fff;
+    opacity: 0;
+  }
+  100% {
+    box-shadow: 0 0 0 1rem #fff;
+    opacity: 1;
+  }
+}
+    

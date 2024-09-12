@@ -1,0 +1,12 @@
+.st-item {
+    margin: 3px; 
+    width: 60px; 
+    height: 60px; 
+    display:inline;
+    float:left;
+}
+
+.st-down {
+    width: 10px; 
+    height: 70px;
+}

@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en" data-bs-theme="dark">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+    <link rel="stylesheet"href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <link href="{{ url_for('static', filename='css/body.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/animation3.css') }}" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/box.ico') }}">
+    <link href="{{ url_for('static', filename='css/storeg.css') }}" rel="stylesheet">
+<script src="{{ url_for('static', filename='js/storeg.js') }}"></script>
+<script src="{{ url_for('static', filename='js/dropzone.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/music.js') }}"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dropzone.css') }}" type="text/css" />
+<script src="{{ url_for('static', filename='js/id3-minimized.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js"></script>
+<script>
+  let link_folder = "{{link_folder}}", link_file = "{{link_file}}";
+  const username = "{{username}}";
+  Dropzone.options.dropper = {
+        paramName: "file",
+        chunking: true,
+        forceChunking: true,
+        url: "/storeg/file/upload2",
+        maxFilesize: 9999025, // megabytes
+        chunkSize: 1000000 // bytes
+    }
+</script> 
+    
+    <meta charset="UTF-8">
+    <title>Open Storage</title>
+  </head>
+    <body id="" class="" style="width:100%; overflow: hidden; padding: 5px; background-color: #000000;" >
+    <img class="position-absolute top-50 start-50 translate-middle-x " style="margin: auto; z-index: -1; opacity: 0.4;" width="100px" src="/static/img/box.png">
+      <!-- Message  -->
+      <div class="modal fade" id="alertmodal" tabindex="-1"  aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" >
+          <div class="" style="background-color: #1f1f1f; width: 100%;">
+            <div class="modal-header">
+              <div class="modal-title " id="labelmessage"></div>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <div class="modal-body " id="textmessage">
+              
+            </div>
+            </div>
+    
+          </div>
+        </div>
+
+        <div id="loader" class="d-flex justify-content-center position-absolute unvis" style=" z-index: 2; width: 100vw; height: 100vh; background-color: #131313; opacity: 0.8;">
+          <div class="spinner-border" role="status" style="margin-top: 50%;">
+
+          </div>
+        </div>
+        
+      
+      <div id="Loading" class="position-absolute unvis" style="z-index: 2; height: 100vh; width: 100vw; background-color: #000000;opacity: 0.8;">
+        <span style="margin: auto;margin-top: 50vh" class="loader"></span>
+
+      </div>
+
+      <div class=" body-content-mb" style="overflow-y: scroll; overflow-x: hidden; height: calc(100vh - 80px);"  id="body-content">
+
+
+        <script type="text/javascript">
+	
+          // запрещаем вызов стандартного меню
+          document.oncontextmenu = function() {return false;};
+          
+          // когда страница полностью загрузилась — можно показывать новое меню
+          $(document).ready(function() {
+        
+            // отслеживаем нажатие мыши на странице
+            $(document).mousedown(function(event) {
+                
+              
+              if (event.which === 3)  {
+                left_ = event.pageX+'px', 
+                top_ =  event.pageY+'px' 
+                setid('dopmenu_context').setAttribute("style","width: 38px; z-index: 1;margin-right: 5px;left:"+left_+";top:"+top_+";")
+                setid('dopmenu_context').classList.remove('unvis')
+              }
+              
+        
+              if (event.which != 3)  {
+              // убираем наше контекстное меню со страницы
+              setTimeout(() => {  setid('dopmenu_context').classList.add('unvis'); }, 100); }
+            });
+          });
+        </script>
+
+<div id="dopmenu_context" class="position-absolute unvis" style="width: 38px; z-index: 3;margin-right: 5px;">
+  <img onclick="showDelModal('!curentfolder!')" src="/static/img/v4/folder-remove.svg" style="width: 40px; margin: 3px; margin-bottom: 15px;">
+  
+  <img onclick="$('#foldermodal').modal('show')" src="/static/img/v4/folder.svg" style="width: 40px; margin: 3px;">
+  <img onclick="$('#uploadmodal').modal('show')"  src="/static/img/v4/upload.svg" style="width: 40px; margin: 3px;">
+  
+  
+</div>
+
+ <!-- Content view  -->
+ <div class="modal fade" onclick="PauseMedia()"  id="contentmodal" tabindex="-1"  aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" >
+      <div class="modal-content" style="background-color: #1f1f1f; width: 100%; height: calc(100vh - 70px);">
+        <div class="modal-header">
+          <div class="modal-title " style="max-width: 90%; overflow: hidden;" id="contentlabelmessage"></div>
+          <button type="button" onclick="updateURLFull('folder='+curentfolder)" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+        </div>
+        <div class="position-absolute" style="margin: 5px; bottom: 40px;">Вес файла: <div id="file_size" style="display:inline;">45</div></div>
+        <img class="unvis scale" id="contentimg" style="height: 100%; width: 100%;object-fit: contain; margin: auto;"> 
+        <textarea id="modalTexArea" style="height: 80vh; max-height: 80vh; width: 100%;" readOnly></textarea>
+        <video id="modalMedia" class="unvis" Autoplay=autoplay src="" style="width: 100%; height: 100%; object-fit: contain; margin: auto;" type="video/mp4" controls></video>
+        <canvas id="pdf-viewer" style="width: 100%; height: 70vh;"></canvas>
+        <div style="margin-top: 5px;"><hr>
+            <div class="d-flex flex-row-reverse">   
+                <div class="p-1"><button class="btn btn-outline-light" style="border: none;" data-bs-dismiss="modal" id="btn_rm_file"><img  src="/static/img/v4/trash.svg" style="width: 36px;"></button></div> 
+                <div class="p-1" style="margin-right: 15px;"></div>
+                <div class="p-1"><a src="" id="btn_download" download><button class="btn btn-outline-light" style="border: none;" ><img src="/static/img/v4/download.svg" style="width: 36px;"></button></a></div>
+                <div class="p-1"><button onclick="CopyClipboar(window.location.href)" class="btn btn-outline-light" style="border: none;" data-bs-dismiss="modal" id="btn_shared_file"><img  src="/static/img/v4/shared.svg" style="width: 36px;"></button></div> 
+              </div>
+        </div>
+        </div>
+        
+      </div>
+    </div>
+
+    <!-- New Folder  -->
+ <div class="modal fade"  id="foldermodal" tabindex="-1"  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" >
+    <div class="modal-content" style="background-color: #1f1f1f; width: 100%;">
+      <div class="modal-header">
+        <div class="modal-title " >Создать новую директорию</div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+      </div>
+      <input style="border-radius: 0px;" type="text" id="new_folde_name" class="form-control" >
+      <div style="margin-top: 5px; padding: 5px;">
+          <button onclick="mkrid()" style="border-radius: 0px; width: 100%;" data-bs-dismiss="modal" type="button" class="btn btn-outline-light">Создать</button> 
+      </div>
+      </div>
+    </div>
+  </div>
+
+   <!-- Dialog RM File  -->
+ <div class="modal fade"  id="RMmodal" tabindex="-1"  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" >
+    <div class="modal-content" style="background-color: #1f1f1f; width: 100%;">
+      <div class="modal-header">
+        <div class="modal-title " >Вы действительно хотите удалить ?</div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+      </div>
+      <input style="border-radius: 0px;" type="text" id="rm_name" class="form-control" disabled>
+      <div class="d-flex justify-content-around" style="margin-top: 5px; padding: 5px;">
+          <button id="rm_btn_yes" onclick="" style="border-radius: 0px; width: 40%;" data-bs-dismiss="modal" type="button" class="btn btn-outline-danger">Да</button> 
+          <button onclick="" style="border-radius: 0px; width: 40%;" data-bs-dismiss="modal" type="button" class="btn btn-outline-light">Нет</button> 
+      </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Upload file  -->
+ <div class="modal fade"  id="uploadmodal" tabindex="-1"  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" >
+    <div class="modal-content" style="background-color: #1f1f1f; width: 100%;">
+      <div class="modal-header">
+        <div class="modal-title " >Загрузить файлы</div>
+        <button onclick="GetContentList(curentfolder)" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+      </div>
+      <div style="overflow-y: scroll;" class="listuploadfile">
+        <div class="listuploadfile-up">
+          
+        </div>
+      </div> 
+      <div class="unvis" style="margin-top: 5px; padding: 5px;">
+        <form action = "/storeg/file/upload" method="POST" enctype="multipart/form-data">
+          <input id="folderinput" type="hidden" name="folder" value="folder">
+          <input id="fileuploadinput" onchange="showlistfile()" type="file" name="file" multiple/>
+          <input onclick="Loading()" data-bs-dismiss="modal" type = "submit" value="Загрузить">
+        </form>
+      </div>
+      <form method="POST" action="/storeg/file/upload2" class="dropzone dz-clickable" id="dropper" enctype="multipart/form-data">
+      </form>
+      </div>
+      
+    </div>
+  </div>
+
+  <div class="card position-absolute text-center unvis start-50 end-50 translate-middle-x" id="panelms" onclick="$('#ModalMusic').modal('show')" style="z-index: 2;top: 0px; opacity: 0.6; width: 50vw; background-color: blueviolet;"></div>
+  <!-- Music player  -->
+  <div class="modal fade" id="ModalMusic" tabindex="-1" onclick="musicstatus()" aria-labelledby="ModalMusic" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" >
+      <div class="modal-content" style="background-color: #1f1f1f; width: 100%;">
+        <div class="modal-header">
+          <div class="modal-title " id=""></div>
+          <button type="button" class="btn-close" onclick="musicstatus()" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+        </div>
+        <div class="modal-body " id="">
+          <div class="prewplayer">
+            <div>
+                
+                <img onclick="showplaylist()" class="position-absolute unvis" style="right: 10px; top: 5px;"  src="{{ url_for('static', filename='img/v2/playlist.svg') }}" width="32">
+                <div class="d-flex justify-content-center"><img onerror="defaultimg()" id="picture" style="width: 100%; max-width: 400px;" ></div>
+                <img class="position-absolute start-50 translate-middle-x unvis" style="border-radius: 6px; top: 10px;height: 40vh;" src="{{ url_for('static', filename='img/user/plesha.jpg') }}">  
+                <div class="text-center nametrack" id="nametrack" style="margin-top: 20px; overflow: hidden; height: 20px;">Name track</div>
+                <div class="audio-track position-absolute start-50 translate-middle-x" style="width: 90%;margin-top: 20px;"><input onclick="nexttime()" ontouchstart="nexttime()" type="range" class="form-range time times" id="time" style="width: 100%; height: 30px;"></div>
+            </div>
+            <div class="d-flex justify-content-around" style="margin-top: 100px;">
+                <button onclick="auPrew()" class="btn" style="width: 70px; "><img src="{{ url_for('static', filename='img/v4/prew.svg') }}" width="32"></button>
+                <button onclick="auPlay()" class="btn btn-outline-light btn-play" style="width: 70px; height: 70px; border-radius: 50px;"><img src="{{ url_for('static', filename='img/v4/play.svg') }}" width="32"></button>
+                <button onclick="auPause()" class="btn btn-outline-light unvis btn-pause" style="width: 70px; height: 70px; border-radius: 50px;"><img src="{{ url_for('static', filename='img/v4/pause.svg') }}" width="32"></button>
+                
+                <button onclick="auNext()" class="btn" style="width: 70px;"><img src="{{ url_for('static', filename='img/v4/next.svg') }}" width="32"></button>
+            </div>
+            <button onclick="shuffleplaylist()" class="btn position-absolute unvis" style="width: 50px; bottom: 10px; right: 5px;"><img src="{{ url_for('static', filename='img/v2/shuffle.svg') }}" width="24"></button>
+            <audio id="players" src=""></audio>
+            </div>
+        </div>
+        <div style="margin-top: 5px;">
+          <div class="d-flex flex-row-reverse">   
+              <div class="p-1"><button class="btn btn-outline-light" style="border: none;" data-bs-dismiss="modal" id="btn_rm_file_music"><img  src="/static/img/v4/trash.svg" style="width: 36px;"></button></div> 
+              <div class="p-1" style="margin-right: 15px;"></div>
+              <div class="p-1"><a src="" id="btn_download_music" download><button class="btn btn-outline-light" style="border: none;" ><img src="/static/img/v4/download.svg" style="width: 36px;"></button></a></div>
+              <div class="p-1"><button onclick="CopyClipboar(window.location.href)" class="btn btn-outline-light" style="border: none;" data-bs-dismiss="modal" id="btn_shared_file_music"><img  src="/static/img/v4/shared.svg" style="width: 36px;"></button></div> 
+            </div>
+      </div>
+      
+      </div>
+    </div>
+  </div>
+
+<div style=" margin: auto;">
+  <div style="margin: 5px;" class="input-group input-group-sm mb-2 ">
+      <input style="border-radius: 0px;" type="text" {% if "username" in req %} onchange="GetContentList(setid('folder_input_path').value)" {% endif %} id="folder_input_path" class="form-control" disabled>
+      <div class="" onclick="ShowDopMenu()" style="margin-left: 5px; margin-right: 5px;"><img src="/static/img/v4/dots.svg" style="width: 30px; margin: 3px;"></div>
+  </div>  
+  <div id="dopmenu" class="position-absolute  mb-2 end-0 unvis" style="width: 38px; z-index: 1;margin-right: 5px;">
+      <img onclick="showDelModal('!curentfolder!')" src="/static/img/v4/folder-remove.svg" style="width: 30px; margin: 3px; margin-bottom: 15px;">
+      
+      <img onclick="$('#foldermodal').modal('show')" src="/static/img/v4/folder.svg" style="width: 30px; margin: 3px;">
+      <img onclick="$('#uploadmodal').modal('show')" src="/static/img/v4/upload.svg" style="width: 30px; margin: 3px;">
+      
+      
+  </div>
+</div>
+    <div class="content-list-parent" id="content-list-parent" >
+        <div class="content-list" id="content-list">
+
+        </div>
+    </div>
+
+      </div>
+  
+    </body>
+</html>
